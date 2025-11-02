@@ -1,0 +1,64 @@
+{
+  "venue": {
+    "name": "Königswirt im Trachtenheim",
+    "areas": {
+      "restaurant_main": { "label": "Restaurant (Hauptraum)", "capacity": 50 },
+      "restaurant_small": { "label": "Kleine Gaststube", "capacity": 25 },
+      "small_hall": { "label": "Kleiner Saal (UG)", "capacity": 45 },
+      "large_hall": { "label": "Großer Veranstaltungssaal", "capacity": 150, "capacity_conference": 180 },
+      "beer_garden": { "label": "Kastanien-Biergarten", "capacity": 250 }
+    },
+    "outdoor_ceremony": { "label": "Freie Trauung unter Kastanien", "price_eur": 300 }
+  },
+  "policies": {
+    "children": { "age_0_4": "free", "age_5_10": "half", "age_11_plus": "full" },
+    "after_midnight_fee_eur_per_hour": 200,
+    "energy_cleaning_flat_eur": 300
+  },
+  "reception": {
+    "location_hint": "Klostergarten",
+    "packages_eur_per_person": [
+      { "name": "Empfang 1", "price": 7.9 },
+      { "name": "Empfang 2", "price": 9.9 },
+      { "name": "Empfang 3", "price": 12.9 }
+    ]
+  },
+  "coffee_package": { "duration_hours": 2, "price_eur_per_person": 8.9, "note": "Kuchen/Torten separat, gerne mitbringen" },
+  "menus": [
+    { "name": "Bayerischer Menüvorschlag", "price_eur_per_person": 41.6 },
+    { "name": "Wedding Menüvorschlag", "price_eur_per_person": 50.6 },
+    { "name": "Sommerlicher Menüvorschlag", "price_eur_per_person": 63.7 },
+    { "name": "Festlicher Menüvorschlag", "price_eur_per_person": 67.6 }
+  ],
+  "buffets": [
+    { "name": "Mediterranes Buffet", "min_persons": 50, "price_eur_per_person": 65.0 },
+    { "name": "Spezialitäten Buffet", "min_persons": 50, "price_eur_per_person": 69.0 }
+  ],
+  "late_night": [
+    { "name": "Brezn-Bar", "price_eur_per_person": 7.9, "min_persons": 20 },
+    { "name": "Weißwurst-Bar", "price_eur_per_person": 7.9 },
+    { "name": "Gulaschsuppe", "price_eur_per_person": 7.9 },
+    { "name": "Käseauswahl", "price_eur_per_person": 12.9 }
+  ],
+  "drinks": {
+    "packages_eur_per_person_8h": [33.0, 38.0],
+    "longdrinks_example_eur_per_drink": 7.9,
+    "digestifs_example_eur": { "obstler_williams_2cl": 3.0, "edelobstbrand_2cl": 4.5 }
+  },
+  "rentals": [
+    { "item": "Stehtisch mit Husse", "price_eur_each": 20 },
+    { "item": "Bierbank", "price_eur_each": 4 },
+    { "item": "Bierbank-Husse", "price_eur_each": 5 },
+    { "item": "Biertisch", "price_eur_each": 7 },
+    { "item": "Tischdecke", "price_eur_each": 6 },
+    { "item": "Speisekarte", "price_eur_each": 2 },
+    { "item": "Eindecken der Tische", "price_eur_per_person": 3.5 },
+    { "item": "Runde Tische (8 Pers.)", "price_eur_each": 25 }
+  ],
+  "corkage": {
+    "wine_prosecco_bottles_up_to_1l_eur": 20,
+    "champagne_bottles_up_to_1l_eur": 30,
+    "plate_fee_eur": 3.5
+  }
+}
+
