@@ -83,32 +83,24 @@ function detectLang(s = "") {
 function isWeddingRelated(s = "") {
   const t = (s || "").toLowerCase();
 
-  const positive = [
-    "hochzeit","trauung","empfang","sektempfang","braut","bräutigam",
-    "gäste","menü","buffet","getränke","pauschale","saal","location",
-    "königswirt","biergarten","klostergarten","dekoration","musik","dj",
-    "fotograf","mitternacht","preise","angebot","anfrage","kapazität",
-    "wedding","ceremony","reception","venue","banquet","menu","drinks","package"
-  ];
+  // broad wedding intents (en/de/ru fragments)
+  const weddingRe = /\b(wedding|marry|married|engaged|fianc[eé]|bride|groom|ceremony|reception|banquet|guest|guests|gäste|personen|venue|location|saal|menü|menu|buffet|drink|drinks|getränke|pauschale|dekor|dekoration|dj|musik|foto|fotograf|timeline|ablauf)\b/i;
 
+  // obvious non-wedding requests
   const negative = [
-    "code","javascript","python","java","c++","funktion","import","react","sql",
-    "essay","aufsatz","artikel","biographie","gedicht","song","lyrics","blog",
-    "mathe","beweis","integral","ableitung","formel","gleichung",
-    "news","nachrichten","politik","wirtschaft","aktien","krypto",
-    "reisen","flug","hotel","wetter","medizin","diagnose","recht","juristisch"
+    " code "," javascript "," python "," java "," c++ "," react "," sql ",
+    " essay "," aufsatz "," artikel "," blog ",
+    " math "," beweis "," integral "," ableitung ",
+    " news "," nachrichten "," politik "," aktien "," krypto ",
+    " reisen "," flug "," hotel "," wetter "," medizin "," diagnose "," recht "
   ];
 
-  const posHit = positive.some(k => t.includes(k));
-  const negHit = negative.some(k => t.includes(k));
-
-  if (posHit) return true;
   if (t.includes("königswirt")) return true;
+  if (weddingRe.test(t)) return true;
+  if (negative.some(k => t.includes(k.trim()))) return false;
 
-  if (negHit) return false;
-
-  // default: restrict to wedding topics
-  return false;
+  // neutral → allow (prevents false refusals on mixed sentences)
+  return true;
 }
 
 function offTopicReply(lang = "de") {
