@@ -31,12 +31,19 @@ export default async function handler(req, res) {
     const kvKey = `usage:${userKey}:${day}`;
 
     let count = 0;
+    let kvError = null;
     try {
       const value = await kv.get(kvKey);
       count = value ? Number(value) : 0;
     } catch (e) {
       console.error("KV get failed:", e);
-      return res.status(500).json({ error: "KV query failed", message: e.message });
+      kvError = e.message;
+      // In development/local, KV might not be configured - return partial info
+      if (process.env.NODE_ENV === "development" || !process.env.KV_REST_API_URL) {
+        count = -1; // Indicate KV not available
+      } else {
+        return res.status(500).json({ error: "KV query failed", message: e.message });
+      }
     }
 
     const limit = Number(process.env.DAILY_LIMIT || 25);
@@ -47,12 +54,14 @@ export default async function handler(req, res) {
       userKey,
       day,
       kvKey,
-      count,
+      count: count >= 0 ? count : null,
       limit,
       nudgeAt,
-      remaining: Math.max(0, limit - count),
+      remaining: count >= 0 ? Math.max(0, limit - count) : null,
       isLimited: count > limit,
-      isNearLimit: count >= nudgeAt && count <= limit
+      isNearLimit: count >= nudgeAt && count <= limit,
+      kvAvailable: count >= 0,
+      kvError: kvError || null
     });
 
   } catch (e) {
