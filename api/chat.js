@@ -24,7 +24,6 @@ const faqs = [
 ];
 
 
-
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 
@@ -92,6 +91,10 @@ Knowledge policy:
 
 - Don't prommise anything that is not in the knowledge base.
 
+- If the user asks about a specific question, answer it directly from the knowledge base.
+
+- If users asks about cost, at the end of the answer explain that cost is not final yet and to get the final cost they should fill the form and send it.
+
 - Encourage to fill the entire form and send the form to the team via email (info@koenigswirt-th.de) 
 
 
@@ -131,9 +134,9 @@ If unsure or if a detail is missing from the knowledge base, clearly say so and 
 
       { role: "system", content: system },
 
-      // Provide the KB as context for the model
+      // Provide the KB as context for the model, now merged with faqs
 
-      { role: "system", content: `Königswirt Knowledge Base (JSON):\n${JSON.stringify(kb)}` },
+      { role: "system", content: `Königswirt Knowledge Base (JSON):\n${JSON.stringify({ ...kb, faqs })}` },
 
       ...(history || []).slice(-6),
 
@@ -206,4 +209,3 @@ ${profileLine ? `\nProfil: ${profileLine}` : ""}`
   }
 
 }
-
