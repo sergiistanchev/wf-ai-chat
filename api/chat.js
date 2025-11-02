@@ -1,8 +1,10 @@
 // /api/chat.js
 
 import OpenAI from "openai";
+import { readFileSync } from "fs";
+import { join } from "path";
 
-import faqs from "../knowledge/faqs.json" assert { type: "json" };
+const faqs = JSON.parse(readFileSync(join(process.cwd(), "knowledge", "faqs.json"), "utf-8"));
 
 
 
