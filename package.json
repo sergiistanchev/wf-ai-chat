@@ -1,0 +1,8 @@
+{
+  "name": "wf-ai-chat",
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "openai": "^4.58.0"
+  }
+}
