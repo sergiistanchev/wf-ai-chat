@@ -1,20 +1,13 @@
 // /api/chat.js
 
 import OpenAI from "openai";
-import { readFileSync } from "fs";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-let faqs = [];
-try {
-  faqs = JSON.parse(readFileSync(join(__dirname, "..", "knowledge", "faqs.json"), "utf-8"));
-} catch (e) {
-  // Fallback if file not found - use empty array
-  console.warn("Could not load faqs.json:", e.message);
-}
+// FAQs embedded for Vercel compatibility
+const faqs = [
+  { "q": "capacity", "a": "Herzog Tassilo Saal: bis 200 Gäste. Restaurant: 80-100. Schänke: bis 150." },
+  { "q": "saalmiete", "a": "Saalmiete aktuell 1.500 € (Datum/Verfügbarkeit abhängig)." },
+  { "q": "deko", "a": "Eigene Deko möglich. Aufbau oft ab Vortag 17:00, wenn frei." }
+];
 
 
 
@@ -51,6 +44,9 @@ export default async function handler(req, res) {
 
 
   try {
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({ error: "OPENAI_API_KEY not configured" });
+    }
 
     const { message, history = [] } = req.body || {};
 
