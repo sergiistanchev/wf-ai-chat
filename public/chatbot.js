@@ -228,41 +228,55 @@ function extractProfileFromText(txt) {
 
   const out = {};
 
-  const emailMatch  = txt.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  const text = (txt || "").trim();
+
+  // email
+
+  const emailMatch = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
 
   if (emailMatch) out.email = emailMatch[0];
 
+  // guests (supports EN/DE terms)
 
-
-  const guestsMatch = txt.match(/(\d{1,3})\s*(gäste|guest|guests|people|personen)/i);
+  const guestsMatch = text.match(/(\d{1,3})\s*(gäste|guest|guests|people|personen)/i);
 
   if (guestsMatch) out.guests = parseInt(guestsMatch[1], 10);
 
+  // name: capture 1–2 tokens; stop before connectors/verbs
 
+  const stop = "(?:\\b(?:and|und|и|i'?m|i am|ich bin|getting|wir|we|with|mit|,|\\.|\\d)\\b|$)";
 
-  const namePatterns = [
+  const nameToken = "([A-Za-zÀ-ÖØ-öø-ÿ'-]{2,25})";
 
-    /mein name ist\s+([A-Za-zÀ-ÖØ-öø-ÿ' -]{2,40})/i,
+  const twoTokens = `${nameToken}(?:\\s+${nameToken})?`;
 
-    /ich bin\s+([A-Za-zÀ-ÖØ-öø-ÿ' -]{2,40})/i,
+  const lookaheadStop = `(?=\\s*${stop})`;
 
-    /i am\s+([A-Za-zÀ-ÖØ-öø-ÿ' -]{2,40})/i,
+  const patterns = [
 
-    /i'm\s+([A-Za-zÀ-ÖØ-öø-ÿ' -]{2,40})/i,
+    new RegExp(`mein name ist\\s+${twoTokens}${lookaheadStop}`,"i"),
 
-    /my name is\s+([A-Za-zÀ-ÖØ-öø-ÿ' -]{2,40})/i,
+    new RegExp(`ich bin\\s+${twoTokens}${lookaheadStop}`,"i"),
 
-    /меня зовут\s+([А-Яа-яЁёA-Za-z' -]{2,40})/i
+    new RegExp(`ich heiße\\s+${twoTokens}${lookaheadStop}`,"i"),
+
+    new RegExp(`i am\\s+${twoTokens}${lookaheadStop}`,"i"),
+
+    new RegExp(`i'?m\\s+${twoTokens}${lookaheadStop}`,"i"),
+
+    new RegExp(`меня зовут\\s+${twoTokens}${lookaheadStop}`,"i"),
 
   ];
 
-  for (const re of namePatterns) {
+  for (const re of patterns) {
 
-    const m = txt.match(re);
+    const m = text.match(re);
 
-    if (m && m[1]) {
+    if (m) {
 
-      out.name = m[1].replace(/[.,;:!?].*$/, "").trim();
+      // m[1] is first token, m[2] optional second
+
+      out.name = m[2] ? `${m[1]} ${m[2]}` : m[1];
 
       break;
 
