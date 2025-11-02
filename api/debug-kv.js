@@ -1,6 +1,25 @@
 // /api/debug-kv.js
 
-import { kv } from "@vercel/kv";
+import { createClient } from "redis";
+
+// Redis client for usage tracking
+let redisClient = null;
+async function getRedisClient() {
+  const redisUrl = process.env.wfchat_REDIS_URL || process.env.KV_REST_API_URL;
+  if (!redisUrl) return null;
+  
+  try {
+    if (!redisClient || !redisClient.isOpen) {
+      redisClient = createClient({ url: redisUrl });
+      redisClient.on("error", (err) => console.error("Redis Client Error:", err));
+      await redisClient.connect();
+    }
+    return redisClient;
+  } catch (e) {
+    console.error("Redis connection failed:", e.message);
+    return null;
+  }
+}
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", process.env.CORS_ORIGIN || "*");
@@ -33,16 +52,22 @@ export default async function handler(req, res) {
     let count = 0;
     let kvError = null;
     try {
-      const value = await kv.get(kvKey);
-      count = value ? Number(value) : 0;
-    } catch (e) {
-      console.error("KV get failed:", e);
-      kvError = e.message;
-      // In development/local, KV might not be configured - return partial info
-      if (process.env.NODE_ENV === "development" || !process.env.KV_REST_API_URL) {
-        count = -1; // Indicate KV not available
+      const redis = await getRedisClient();
+      if (redis) {
+        const value = await redis.get(kvKey);
+        count = value ? Number(value) : 0;
       } else {
-        return res.status(500).json({ error: "KV query failed", message: e.message });
+        count = -1; // Redis not available
+        kvError = "Redis client not available - check wfchat_REDIS_URL environment variable";
+      }
+    } catch (e) {
+      console.error("Redis get failed:", e);
+      kvError = e.message;
+      // In development/local, Redis might not be configured - return partial info
+      if (process.env.NODE_ENV === "development" || !process.env.wfchat_REDIS_URL) {
+        count = -1; // Indicate Redis not available
+      } else {
+        return res.status(500).json({ error: "Redis query failed", message: e.message });
       }
     }
 
