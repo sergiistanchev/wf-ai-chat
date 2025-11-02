@@ -1,5 +1,20 @@
 [
   { "q": "capacity", "a": "Herzog Tassilo Saal: bis 200 Gäste. Restaurant: 80-100. Schänke: bis 150." },
   { "q": "saalmiete", "a": "Saalmiete aktuell 1.500 € (Datum/Verfügbarkeit abhängig)." },
-  { "q": "deko", "a": "Eigene Deko möglich. Aufbau oft ab Vortag 17:00, wenn frei." }
+  { "q": "deko", "a": "Eigene Deko möglich. Aufbau oft ab Vortag 17:00, wenn frei." },
+  { "q": "Wie viele Gäste können im Königswirt feiern?", "a": "Im großen Saal können bis zu 150 Gäste feiern, im kleinen Saal bis zu 45 Personen. Im Restaurant finden rund 50 Gäste Platz, und im Biergarten gibt es ca. 250 Sitzplätze." },
+  { "q": "Wann kann die Location dekoriert werden?", "a": "Die Räume stehen am Veranstaltungstag ab 7 Uhr morgens zur Verfügung. Wenn sie am Vortag nicht belegt sind, ist der Aufbau ab 17 Uhr möglich." },
+  { "q": "Was kostet die Saalmiete?", "a": "Die Saalmiete beträgt derzeit 1.500 €, abhängig von Datum und Verfügbarkeit." },
+  { "q": "Wie hoch ist die Pauschale für Energie und Reinigung?", "a": "Für Energiekosten, Klimaanlage, WC-Service und Endreinigung wird eine Pauschale von 300 € berechnet." },
+  { "q": "Welche Getränkepauschalen gibt es?", "a": "Es gibt mehrere Getränkepauschalen: z.B. 33 € pro Person (Biere, Wein, alkoholfreie Getränke) oder 38 € pro Person mit Aperol Spritz oder Hugo. Sie gelten für 8 Stunden, danach nach Verbrauch." },
+  { "q": "Kann man eigene Getränke oder Kuchen mitbringen?", "a": "Ja, aber es wird Korkgeld und Tellergeld berechnet: 20 € pro Wein-/Proseccoflasche, 30 € pro Champagnerflasche, 3,50 € Tellergeld pro Person." },
+  { "q": "Welche Mietgegenstände sind verfügbar?", "a": "Stehtisch 20 €, Bierbank 4 €, Bierbankhusse 5 €, Biertisch 7 €, Tischdecke 6 €, Speisekarte 2 €, Eindecken der Tische 3,50 € p.P., runde Tische 25 € pro Tisch." },
+  { "q": "Wie lange darf gefeiert werden?", "a": "Üblicherweise endet die Feier um Mitternacht. Ab 24 Uhr wird ein Aufschlag von 200 € pro angefangener Stunde berechnet." },
+  { "q": "Gibt es eine Kinderermäßigung?", "a": "Ja: Kinder bis 4 Jahre sind gratis, 5–10 Jahre zahlen die Hälfte, ab 11 Jahren den vollen Preis." },
+  { "q": "Wann können Torten oder Kuchen geliefert werden?", "a": "Kuchen können von 09:30–11:00 Uhr und 14:00–16:30 Uhr angeliefert werden. Bitte deutlich beschriften." },
+  { "q": "Welche Optionen gibt es für den Hochzeitsempfang?", "a": "Es gibt verschiedene Empfangspauschalen (z. B. Prosecco, Aperol Spritz, alkoholfreie Spritzgetränke) ab 7,90 € bis 12,90 € pro Person." },
+  { "q": "Welche Menüs und Buffets bietet der Königswirt an?", "a": "Es gibt verschiedene Menüvorschläge (z. B. festlich, bayrisch, mediterran) sowie Buffets ab 50 Personen. Preise liegen zwischen 41 € und 69 € pro Person." },
+  { "q": "Gibt es vegane oder vegetarische Optionen?", "a": "Ja, z. B. Spinatknödel in Tomatensugo, Gerstengraupen-Risotto oder gegrilltes Lachsfilet mit Basilikum-Pesto." },
+  { "q": "Was gibt es als Mitternachtssnack?", "a": "Zur Auswahl stehen Gulaschsuppe, Brezen-Bar, Currywurst, Käseauswahl, Weißwurst-Bar – je ab 20 Personen, Preise ca. 7,90–12,90 €." },
+  { "q": "Kann im Freien geheiratet werden?", "a": "Ja, im romantischen Kastaniengarten ist eine freie Trauung im Grünen möglich (Gebühr 300 €)." }
 ]
