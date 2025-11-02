@@ -29,11 +29,7 @@ function retrieveHint(text = "") {
 
 export default async function handler(req, res) {
 
-  // CORS: open while testing; lock to your domain later via env
-
-  const origin = process.env.CORS_ORIGIN || "*";
-
-  res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Access-Control-Allow-Origin", process.env.CORS_ORIGIN || "*");
 
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
@@ -48,7 +44,11 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "OPENAI_API_KEY not configured" });
     }
 
-    const { message, history = [] } = req.body || {};
+    const { message, history = [], profile = {}, session_id } = req.body || {};
+
+    const { name, email, guests } = profile;
+
+
 
     if (!message) return res.status(400).json({ error: "Missing message" });
 
@@ -56,19 +56,37 @@ export default async function handler(req, res) {
 
     const system = `
 
-You are Leon, a warm, concise wedding assistant for our Bavarian venue.
+You are Leon, the venue's wedding assistant.
 
-Answer only about our venue/services. Prefer German; if user writes Russian, reply in Russian.
+- Be concise, friendly, and on-brand.
 
-Do not promise availability; suggest sending date + email.
+- If a name is provided, address the user by name once in the first reply ("Hallo Anna, ..."), then naturally.
 
-Use € for prices. If unsure, ask one clarifying question.
+- Never expose or confirm private info unless the user brings it up (email, phone).
 
-    `.trim();
+- Don't promise availability; ask for date and approximate guest count if missing.
+
+- Use € for prices. If unsure, ask one clarifying question.
+
+`.trim();
 
 
+
+    // Light hint from FAQs (keep as you had)
 
     const context = retrieveHint(message);
+
+
+
+    // Build a small profile blurb for the model (safe/useful only)
+
+    const profileLine = [
+
+      name ? `Name: ${name}` : null,
+
+      guests ? `Gäste (geplant): ${guests}` : null
+
+    ].filter(Boolean).join(" | ");
 
 
 
@@ -76,9 +94,15 @@ Use € for prices. If unsure, ask one clarifying question.
 
       { role: "system", content: system },
 
-      ...history.slice(-6),
+      ...(history || []).slice(-6),
 
-      { role: "user", content: `Frage: ${message}\n${context ? "\n" + context : ""}` }
+      { role: "user", content:
+
+`Frage: ${message}
+
+${context ? "\n" + context : ""}
+
+${profileLine ? `\nProfil: ${profileLine}` : ""}` }
 
     ];
 
@@ -97,6 +121,26 @@ Use € for prices. If unsure, ask one clarifying question.
 
 
     const reply = completion.choices?.[0]?.message?.content ?? "…";
+
+
+
+    // Optional: log to Make or your DB with session_id to stitch chats + form
+
+    // if (process.env.MAKE_WEBHOOK_URL) {
+
+    //   await fetch(process.env.MAKE_WEBHOOK_URL, {
+
+    //     method: "POST",
+
+    //     headers: { "Content-Type": "application/json" },
+
+    //     body: JSON.stringify({ session_id, profile, question: message, answer: reply, ts: Date.now() })
+
+    //   });
+
+    // }
+
+
 
     res.status(200).json({ ok: true, reply });
 
