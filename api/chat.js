@@ -2,9 +2,19 @@
 
 import OpenAI from "openai";
 import { readFileSync } from "fs";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
-const faqs = JSON.parse(readFileSync(join(process.cwd(), "knowledge", "faqs.json"), "utf-8"));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+let faqs = [];
+try {
+  faqs = JSON.parse(readFileSync(join(__dirname, "..", "knowledge", "faqs.json"), "utf-8"));
+} catch (e) {
+  // Fallback if file not found - use empty array
+  console.warn("Could not load faqs.json:", e.message);
+}
 
 
 
