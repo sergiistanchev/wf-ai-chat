@@ -102,9 +102,17 @@ Use € for prices. If unsure, ask one clarifying question.
 
   } catch (e) {
 
-    console.error(e);
+    console.error("API Error:", e);
 
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ 
+
+      error: "Server error", 
+
+      message: e.message || "Unknown error",
+
+      details: process.env.NODE_ENV === "development" ? e.stack : undefined
+
+    });
 
   }
 
