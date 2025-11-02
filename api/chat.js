@@ -115,6 +115,13 @@ Let’s stay focused on your big day at Königswirt. How can I help? (menus, roo
   return lines[lang] || lines.de;
 }
 
+// Simple hint retrieval (optional - KB is already provided in system message)
+function retrieveHint(message = "") {
+  // Since the full knowledge base is provided in the system message,
+  // we don't need to extract specific hints here
+  return "";
+}
+
 const system = `
 You are "Leon", the AI wedding assistant for **Königswirt im Trachtenheim** (not Thierhaupten).
 Primary language: German. If the user writes another language, answer in that language. Be concise, friendly, and on-brand.
