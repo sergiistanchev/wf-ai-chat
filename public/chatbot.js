@@ -284,6 +284,20 @@ function extractProfileFromText(txt) {
 
   }
 
+  // If no name found yet, check for standalone name (short message, capitalized word)
+  // Only match if message is 1-2 words and starts with a capital letter
+  if (!out.name) {
+    const words = text.split(/\s+/).filter(w => w.length > 0);
+    if (words.length >= 1 && words.length <= 2) {
+      // Check if first word looks like a name (starts with capital, 2-25 chars, no numbers)
+      const firstWord = words[0];
+      if (/^[A-ZÀ-ÖØ-ÿ][a-zà-öø-ÿ'-]{1,24}$/.test(firstWord)) {
+        // If it's just one word, use it; if two words, use both
+        out.name = words.length === 1 ? firstWord : words.join(' ');
+      }
+    }
+  }
+
   return out;
 
 }
