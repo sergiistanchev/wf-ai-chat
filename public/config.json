@@ -15,6 +15,20 @@
         "/planung"
       ],
       "domains": ["koenigswirt.webflow.io", "www.koenigswirt-th.de", "koenigswirt-th.de"]
+    },
+    "slider-testimonials": {
+      "file": "slider-testimonials.js",
+      "pages": [
+        "*"
+      ],
+      "domains": ["koenigswirt.webflow.io", "www.koenigswirt-th.de", "koenigswirt-th.de"]
+    },
+    "global": {
+      "file": "global.js",
+      "pages": [
+        "*"
+      ],
+      "domains": ["koenigswirt.webflow.io", "www.koenigswirt-th.de", "koenigswirt-th.de"]
     }
   },
   "defaultDomain": "www.koenigswirt-th.de"
