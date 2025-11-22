@@ -194,6 +194,50 @@ function add(role, text){
 
 }
 
+// === TYPING INDICATOR ===
+
+let typingIndicator = null;
+
+function showTypingIndicator() {
+  // Remove existing indicator if any
+  hideTypingIndicator();
+  
+  typingIndicator = document.createElement("div");
+  typingIndicator.id = "wf-ai-typing";
+  typingIndicator.style.margin = "8px 0";
+  typingIndicator.style.opacity = "0.7";
+  typingIndicator.innerHTML = `<b>Leon</b>: <span class="typing-cursor">▋</span>`;
+  
+  // Add blinking cursor animation
+  const style = document.createElement("style");
+  style.textContent = `
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    .typing-cursor {
+      display: inline-block;
+      animation: blink 1s infinite;
+      color: #3b82f6;
+      font-weight: bold;
+    }
+  `;
+  if (!document.getElementById("wf-ai-typing-style")) {
+    style.id = "wf-ai-typing-style";
+    document.head.appendChild(style);
+  }
+  
+  thread.appendChild(typingIndicator);
+  thread.scrollTop = thread.scrollHeight;
+}
+
+function hideTypingIndicator() {
+  if (typingIndicator && typingIndicator.parentNode) {
+    typingIndicator.parentNode.removeChild(typingIndicator);
+    typingIndicator = null;
+  }
+}
+
 
 
 // === INITIALIZE CHAT ===
@@ -401,9 +445,13 @@ form.addEventListener("submit", async (e) => {
 
     await maybeAutofillFromMessage(msg);
 
-
+    // Show typing indicator
+    showTypingIndicator();
 
     const data = await sendChat(msg, history);
+    
+    // Hide typing indicator
+    hideTypingIndicator();
 
     const reply = data.reply || "…";
 
@@ -414,7 +462,9 @@ form.addEventListener("submit", async (e) => {
     saveHistory(history);
 
   }catch{
-
+    // Hide typing indicator on error too
+    hideTypingIndicator();
+    
     const err = "Entschuldigung, es gab ein Problem.";
 
     add("assistant", err);
@@ -458,7 +508,7 @@ softBtn.textContent = "Neues Gespräch";
 softBtn.style.cssText = "margin-top:8px;background:none;border:0;color:#6b7280;cursor:pointer";
 
 softBtn.addEventListener("click", () => {
-
+  hideTypingIndicator();
   localStorage.removeItem(CHAT_KEY);
 
   thread.innerHTML = "";
@@ -520,7 +570,7 @@ hardBtn.addEventListener("click", () => {
 
 
   // Reset UI
-
+  hideTypingIndicator();
   thread.innerHTML = "";
 
   history = [];
