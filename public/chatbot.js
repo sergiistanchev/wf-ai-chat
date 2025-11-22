@@ -200,7 +200,16 @@ function add(role, text){
 
 let history = loadHistory();
 
-history.forEach(m => add(m.role, m.content));
+// If no history exists, add a welcome message
+if (history.length === 0) {
+  const welcomeMsg = "Neues Gespräch gestartet. Wie kann ich helfen?";
+  add("assistant", welcomeMsg);
+  history.push({ role: "assistant", content: welcomeMsg });
+  saveHistory(history);
+} else {
+  // Load existing history
+  history.forEach(m => add(m.role, m.content));
+}
 
 
 
