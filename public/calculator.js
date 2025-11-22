@@ -430,17 +430,82 @@ function updateSummaryTotalPrice() {
 
 
 // NEW FUNCTION: Copy summary content into the input field with id "angebot"
+// Also populate hidden JSON field with structured data for email
 
 function updateAngebot() {
-
   const angebotInput = document.querySelector('#angebot');
-
   if (angebotInput) {
-
     angebotInput.value = summaryContent.innerText;
-
   }
 
+  // Also create/update hidden JSON field for structured estimate data
+  let estimateDataInput = document.querySelector('#estimate-data-json');
+  if (!estimateDataInput) {
+    estimateDataInput = document.createElement('input');
+    estimateDataInput.type = 'hidden';
+    estimateDataInput.id = 'estimate-data-json';
+    estimateDataInput.name = 'estimate-data-json';
+    if (angebotInput && angebotInput.parentElement) {
+      angebotInput.parentElement.appendChild(estimateDataInput);
+    }
+  }
+
+  // Build structured data from summary groups
+  const estimateData = {
+    guests: parseInt(guestInput?.value || "10", 10),
+    total: parseFloat(totalPriceDisplay?.textContent || "0"),
+    groups: {}
+  };
+
+  // Extract data from summary groups and calculate totals
+  if (summaryContent) {
+    summaryContent.querySelectorAll('.summary_group').forEach(groupEl => {
+      const groupName = groupEl.getAttribute('data-group');
+      if (!groupName) return;
+
+      const items = [];
+      groupEl.querySelectorAll('.summary_item-list li').forEach(itemEl => {
+        const itemName = itemEl.querySelector('.summary_item')?.textContent || '';
+        const priceText = itemEl.querySelector('.summary_price')?.textContent || '';
+        
+        // Extract price from text like ": 7,90 € p. P." or ": 10" or ": 40€"
+        const priceMatch = priceText.match(/:\s*([\d,]+)/);
+        const pricePerUnit = priceMatch ? parseFloat(priceMatch[1].replace(',', '.')) : 0;
+        
+        // Determine if it's per person or per piece
+        const isPerPerson = priceText.includes('p. P.') || priceText.includes('pro Person');
+        const isPerPiece = priceText.includes('p. St.') || priceText.includes('pro Stück') || 
+                          priceText.includes('€') && !priceText.includes('p. P.');
+        
+        // Calculate total for this item
+        let itemTotal = 0;
+        if (isPerPerson && pricePerUnit > 0) {
+          itemTotal = pricePerUnit * estimateData.guests;
+        } else if (isPerPiece && pricePerUnit > 0) {
+          // For per-piece items, assume quantity 1 (or extract from name if available)
+          itemTotal = pricePerUnit;
+        } else if (pricePerUnit > 0 && !isPerPerson && !isPerPiece) {
+          // Default: assume it's a total already (like guest count)
+          itemTotal = pricePerUnit;
+        }
+
+        items.push({
+          name: itemName,
+          priceText: priceText.replace(':', '').trim(),
+          pricePerUnit: pricePerUnit,
+          isPerPerson: isPerPerson,
+          isPerPiece: isPerPiece,
+          total: itemTotal
+        });
+      });
+
+      if (items.length > 0) {
+        estimateData.groups[groupName] = items;
+      }
+    });
+  }
+
+  estimateDataInput.value = JSON.stringify(estimateData);
 }
 
 
