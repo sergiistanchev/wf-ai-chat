@@ -27,14 +27,44 @@ async function getRedisClient() {
   if (!redisUrl) return null;
   
   try {
-    if (!redisClient || !redisClient.isOpen) {
-      redisClient = createClient({ url: redisUrl });
-      redisClient.on("error", (err) => console.error("Redis Client Error:", err));
-      await redisClient.connect();
+    // If we have a client but it's not open, reset it
+    if (redisClient && !redisClient.isOpen) {
+      redisClient = null;
     }
-    return redisClient;
+    
+    if (!redisClient) {
+      redisClient = createClient({ 
+        url: redisUrl,
+        socket: {
+          connectTimeout: 2000, // 2 second timeout
+          reconnectStrategy: false // Don't auto-reconnect in serverless
+        }
+      });
+      redisClient.on("error", (err) => {
+        console.error("Redis Client Error:", err.message);
+        // Mark client as unusable
+        redisClient = null;
+      });
+      
+      // Add timeout to connection attempt
+      const connectPromise = redisClient.connect();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Redis connection timeout")), 2000)
+      );
+      
+      await Promise.race([connectPromise, timeoutPromise]);
+    }
+    
+    // Verify connection is still open before returning
+    if (redisClient && redisClient.isOpen) {
+      return redisClient;
+    } else {
+      redisClient = null;
+      return null;
+    }
   } catch (e) {
-    console.error("Redis connection failed:", e.message);
+    console.warn("Redis connection failed:", e.message);
+    redisClient = null; // Reset on failure
     return null;
   }
 }
@@ -207,14 +237,25 @@ export default async function handler(req, res) {
     let count = 0;
     try {
       const redis = await getRedisClient();
-      if (redis) {
-        count = await redis.incr(kvKey);
+      if (redis && redis.isOpen) {
+        // Add timeout to Redis operations as well
+        const incrPromise = redis.incr(kvKey);
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("Redis operation timeout")), 1000)
+        );
+        count = await Promise.race([incrPromise, timeoutPromise]);
+        
         if (count === 1) {
-          await redis.expire(kvKey, secondsTillMidnightBerlin());
+          const expirePromise = redis.expire(kvKey, secondsTillMidnightBerlin());
+          await Promise.race([expirePromise, timeoutPromise]).catch(() => {
+            // Ignore expire timeout - not critical
+          });
         }
       }
     } catch (e) {
-      console.warn("Redis incr/expire failed:", e.message);
+      console.warn("Redis operation failed:", e.message);
+      // Continue without usage tracking if Redis fails
+      count = 0;
     }
 
     // Hard limit: stop here with a friendly beer message
