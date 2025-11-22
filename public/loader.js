@@ -118,22 +118,39 @@
         });
 
         if (matchesPagePath && matchesDomainName) {
-          const scriptUrl = `${SCRIPT_BASE_URL}/${scriptConfig.file}`;
-          scriptsToLoad.push({ name: scriptName, url: scriptUrl });
+          const scriptUrl = scriptConfig.file.startsWith('http') 
+            ? scriptConfig.file 
+            : `${SCRIPT_BASE_URL}/${scriptConfig.file}`;
+          scriptsToLoad.push({ 
+            name: scriptName, 
+            url: scriptUrl,
+            dependencies: scriptConfig.dependencies || []
+          });
         }
       }
 
-      // Load all matching scripts
+      // Load all matching scripts (with dependencies)
       if (scriptsToLoad.length > 0) {
         log(`Loading ${scriptsToLoad.length} script(s):`, scriptsToLoad.map(s => s.name));
         
-        const loadPromises = scriptsToLoad.map(script => 
-          loadScript(script.url).catch(err => {
+        // Load each script with its dependencies
+        for (const script of scriptsToLoad) {
+          try {
+            // Load dependencies first (sequentially)
+            if (script.dependencies && script.dependencies.length > 0) {
+              log(`Loading ${script.dependencies.length} dependency/ies for ${script.name}`);
+              for (const dep of script.dependencies) {
+                const depUrl = dep.startsWith('http') ? dep : `${SCRIPT_BASE_URL}/${dep}`;
+                await loadScript(depUrl);
+              }
+            }
+            // Then load the main script
+            await loadScript(script.url);
+          } catch (err) {
             console.error(`Failed to load ${script.name}:`, err);
-          })
-        );
-
-        await Promise.all(loadPromises);
+          }
+        }
+        
         log('All scripts loaded successfully');
       } else {
         log('No scripts to load for current page/domain');
