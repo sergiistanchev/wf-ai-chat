@@ -23,7 +23,7 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 // Redis client for usage tracking
 let redisClient = null;
 async function getRedisClient() {
-  const redisUrl = process.env.wfchat_REDIS_URL || process.env.KV_REST_API_URL;
+  const redisUrl = process.env.koenigswirt_REDIS_URL || process.env.wfchat_REDIS_URL || process.env.KV_REST_API_URL;
   if (!redisUrl) return null;
   
   try {

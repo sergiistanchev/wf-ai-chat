@@ -5,7 +5,7 @@ import { createClient } from "redis";
 // Redis client for usage tracking
 let redisClient = null;
 async function getRedisClient() {
-  const redisUrl = process.env.wfchat_REDIS_URL || process.env.KV_REST_API_URL;
+  const redisUrl = process.env.koenigswirt_REDIS_URL || process.env.wfchat_REDIS_URL || process.env.KV_REST_API_URL;
   if (!redisUrl) return null;
   
   try {
@@ -93,7 +93,7 @@ export default async function handler(req, res) {
         count = value ? Number(value) : 0;
       } else {
         count = -1; // Redis not available
-        kvError = "Redis client not available - check wfchat_REDIS_URL environment variable";
+        kvError = "Redis client not available - check koenigswirt_REDIS_URL environment variable";
       }
     } catch (e) {
       console.warn("Redis get failed:", e.message);
