@@ -1,0 +1,22 @@
+{
+  "scripts": {
+    "chatbot": {
+      "file": "chatbot.js",
+      "pages": [
+        "/planung",
+        "/hochzeit",
+        "/kontakt"
+      ],
+      "domains": ["koenigswirt.webflow.io", "www.koenigswirt-th.de", "koenigswirt-th.de"]
+    },
+    "calculator": {
+      "file": "calculator.js",
+      "pages": [
+        "/planung"
+      ],
+      "domains": ["koenigswirt.webflow.io", "www.koenigswirt-th.de", "koenigswirt-th.de"]
+    }
+  },
+  "defaultDomain": "www.koenigswirt-th.de"
+}
+
