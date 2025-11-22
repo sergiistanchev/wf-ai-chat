@@ -216,7 +216,9 @@ function calculateTotal() {
 
 
 
-  totalPriceDisplay.textContent = total.toFixed(2);
+  if (totalPriceDisplay) {
+    totalPriceDisplay.textContent = total.toFixed(2);
+  }
 
 }
 
@@ -251,8 +253,11 @@ targetElements.forEach(element => {
 
 
 // Attach event listeners to various inputs to update total price on changes
+// Only attach listeners if elements exist (calculator might not be on all pages)
 
-guestInput.addEventListener('input', calculateTotal);
+if (guestInput) {
+  guestInput.addEventListener('input', calculateTotal);
+}
 
 locations.forEach(loc => loc.addEventListener('change', calculateTotal));
 
@@ -294,11 +299,15 @@ calculateTotal();
 
 const summaryContent = document.getElementById("summary-content");
 
-
+// Exit early if summary section doesn't exist
+if (!summaryContent) {
+  console.log('[Calculator] Summary section not found, skipping summary functionality');
+}
 
 // Create a new group or find an existing one in the summary section
 
 function getGroupElement(group) {
+  if (!summaryContent) return null;
 
   let groupElement = summaryContent.querySelector(`.summary_group[data-group="${group}"]`);
 
@@ -337,8 +346,10 @@ function getGroupElement(group) {
 // Add or update items in the summary section based on selections
 
 function addItemToGroup(group, name, price) {
+  if (!summaryContent) return;
 
   const groupElement = getGroupElement(group);
+  if (!groupElement) return;
 
   let itemElement = groupElement.querySelector(`[data-item="${name}"]`);
 
@@ -381,8 +392,10 @@ function addItemToGroup(group, name, price) {
 // Remove an item from the summary section
 
 function removeItemFromGroup(group, name) {
+  if (!summaryContent) return;
 
   const groupElement = getGroupElement(group);
+  if (!groupElement) return;
 
   const itemElement = groupElement.querySelector(`[data-item="${name}"]`);
 
@@ -413,6 +426,7 @@ function removeItemFromGroup(group, name) {
 // Update the display of total price in the summary
 
 function updateSummaryTotalPrice() {
+  if (!summaryContent) return;
 
   const totalPriceElement = document.querySelector('[data-text="total"]');
 

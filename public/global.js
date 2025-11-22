@@ -1,5 +1,11 @@
 const displayStatus = () => {
 
+  // Check if status element exists
+  const statusElement = document.getElementById("status");
+  if (!statusElement) {
+    return; // Exit if element doesn't exist
+  }
+
   // Define opening and closing times
 
   const openingHour = 11; // 11:00 AM
@@ -20,7 +26,7 @@ const displayStatus = () => {
 
   if (!operatingDays.includes(now.getDay())) {
 
-    document.getElementById("status").innerText = "Wir haben derzeit geschlossen.";
+    statusElement.innerText = "Wir haben derzeit geschlossen.";
 
     return;
 
@@ -36,19 +42,19 @@ const displayStatus = () => {
 
       const minutesLeft = ((closingHour - 1) * 60 + 60) - (currentHour * 60 + currentMinutes);
 
-      document.getElementById("status").innerText =
+      statusElement.innerText =
 
         `Wir schließen bald! Noch geöffnet für ${Math.ceil(minutesLeft / 60)} Stunde(n).`;
 
     } else {
 
-      document.getElementById("status").innerText = "Wir haben derzeit geöffnet.";
+      statusElement.innerText = "Wir haben derzeit geöffnet.";
 
     }
 
   } else {
 
-    document.getElementById("status").innerText = "Wir haben derzeit geschlossen.";
+    statusElement.innerText = "Wir haben derzeit geschlossen.";
 
   }
 
