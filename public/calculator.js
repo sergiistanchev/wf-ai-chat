@@ -2,8 +2,6 @@
 
 const guestInput = document.querySelector('#number-of-guests');
 
-const locations = document.querySelectorAll('[name="location"]');
-
 const beveragePackages = document.querySelectorAll('[data-type="beverages"]');
 
 const foodPackages = document.querySelectorAll('[data-type="food"]');
@@ -12,8 +10,6 @@ const extrasPackages = document.querySelectorAll('[data-type="extras"]');
 
 const empfangsPauschale = document.querySelectorAll('[name="Empfangspauschale"]');
 
-const rentalLocations = document.querySelectorAll('[data-type="location"]');
-
 const appetizerContainers = document.querySelectorAll('[data-price-group]');
 
 const totalPriceDisplay = document.querySelector('[data-text="total"]');
@@ -21,8 +17,6 @@ const totalPriceDisplay = document.querySelector('[data-text="total"]');
 const comboItems = document.querySelectorAll('[data-group="combo"]');
 
 const minGuestItems = document.querySelectorAll('[min-guests]');
-
-const ceremonyPackages = document.querySelectorAll('[data-type="ceremony"]');
 
 
 
@@ -82,16 +76,6 @@ function calculateTotal() {
 
 
 
-  locations.forEach(loc => {
-
-    if (loc.checked && !loc.closest('.inactive')) {
-
-      total += parseFloat(loc.getAttribute('data-price'));
-
-    }
-
-  });
-
   beveragePackages.forEach(pkg => {
 
     if (pkg.checked) total += parseFloat(pkg.getAttribute('data-price')) * numberOfGuests;
@@ -116,21 +100,6 @@ function calculateTotal() {
 
   });
 
-  ceremonyPackages.forEach(pkg => {
-
-    if (pkg.checked) total += parseFloat(pkg.getAttribute('data-price'));
-
-  });
-
-  rentalLocations.forEach(loc => {
-
-    if (loc.checked && !loc.closest('.inactive')) {
-
-      total += parseFloat(loc.getAttribute('data-price'));
-
-    }
-
-  });
 
 
 
@@ -259,8 +228,6 @@ if (guestInput) {
   guestInput.addEventListener('input', calculateTotal);
 }
 
-locations.forEach(loc => loc.addEventListener('change', calculateTotal));
-
 beveragePackages.forEach(pkg => pkg.addEventListener('change', calculateTotal));
 
 foodPackages.forEach(pkg => pkg.addEventListener('change', calculateTotal));
@@ -268,10 +235,6 @@ foodPackages.forEach(pkg => pkg.addEventListener('change', calculateTotal));
 extrasPackages.forEach(pkg => pkg.addEventListener('change', calculateTotal));
 
 empfangsPauschale.forEach(pkg => pkg.addEventListener('change', calculateTotal));
-
-rentalLocations.forEach(loc => loc.addEventListener('change', calculateTotal));
-
-ceremonyPackages.forEach(pkg => pkg.addEventListener('change', calculateTotal));
 
 document.querySelectorAll('[data-type="starter"]').forEach(input => {
 
