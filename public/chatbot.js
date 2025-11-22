@@ -338,10 +338,16 @@ function extractProfileFromText(txt) {
   }
 
   // If no name found yet, check for standalone name (short message, capitalized word)
-  // Only match if message is 1-2 words and starts with a capital letter
+  // Handle patterns like "Sergii and mail" or "John and email"
   if (!out.name) {
     const words = text.split(/\s+/).filter(w => w.length > 0);
-    if (words.length >= 1 && words.length <= 2) {
+    
+    // Check for pattern: "Name and mail/email" or "Name and"
+    const nameAndPattern = /^([A-ZÀ-ÖØ-ÿ][a-zà-öø-ÿ'-]{1,24})(?:\s+(?:and|und)\s+(?:mail|email|e-mail|e-mail-adresse))?/i;
+    const nameMatch = text.match(nameAndPattern);
+    if (nameMatch) {
+      out.name = nameMatch[1];
+    } else if (words.length >= 1 && words.length <= 2) {
       // Check if first word looks like a name (starts with capital, 2-25 chars, no numbers)
       const firstWord = words[0];
       if (/^[A-ZÀ-ÖØ-ÿ][a-zà-öø-ÿ'-]{1,24}$/.test(firstWord)) {
