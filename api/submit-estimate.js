@@ -264,75 +264,13 @@ export default async function handler(req, res) {
       replyTo: userInfo.email, // So owner can reply directly
     });
 
-    // Return HTML success page for Webflow form submission
-    const successHTML = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Angebot gesendet / Estimate Sent</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      background: #f5f5f5;
-    }
-    .success-container {
-      background: white;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      text-align: center;
-      max-width: 500px;
-    }
-    .success-icon {
-      font-size: 64px;
-      margin-bottom: 20px;
-    }
-    h1 {
-      color: #2c3e50;
-      margin: 0 0 15px 0;
-    }
-    p {
-      color: #666;
-      line-height: 1.6;
-      margin: 10px 0;
-    }
-    .email-note {
-      margin-top: 20px;
-      padding: 15px;
-      background: #f8f9fa;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-  </style>
-</head>
-<body>
-  <div class="success-container">
-    <div class="success-icon">✅</div>
-    <h1>Vielen Dank!</h1>
-    <h2>Thank You!</h2>
-    <p>Ihr Hochzeits-Angebot wurde erfolgreich gesendet.</p>
-    <p>Your wedding estimate has been sent successfully.</p>
-    <div class="email-note">
-      <p><strong>Sie erhalten in Kürze eine E-Mail mit Ihrer Kostenschätzung.</strong></p>
-      <p><strong>You will receive an email with your cost estimate shortly.</strong></p>
-      <p style="margin-top: 15px; font-size: 12px; color: #999;">
-        Bitte überprüfen Sie auch Ihren Spam-Ordner.<br>
-        Please also check your spam folder.
-      </p>
-    </div>
-  </div>
-</body>
-</html>
-    `.trim();
-
-    return res.status(200).send(successHTML);
+    // Return JSON for AJAX form submission (will be handled by frontend)
+    return res.status(200).json({
+      ok: true,
+      message: "Estimate sent successfully",
+      userEmailId: userEmailResult.data?.id,
+      ownerEmailId: ownerEmailResult.data?.id,
+    });
 
   } catch (error) {
     console.error("Submit estimate error:", error);

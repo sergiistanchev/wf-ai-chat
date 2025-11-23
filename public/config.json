@@ -27,13 +27,20 @@
         "https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js"
       ]
     },
-    "global": {
-      "file": "global.js",
-      "pages": [
-        "*"
-      ],
-      "domains": ["koenigswirt.webflow.io", "www.koenigswirt-th.de", "koenigswirt-th.de"]
-    }
+        "global": {
+          "file": "global.js",
+          "pages": [
+            "*"
+          ],
+          "domains": ["koenigswirt.webflow.io", "www.koenigswirt-th.de", "koenigswirt-th.de"]
+        },
+        "form-handler": {
+          "file": "form-handler.js",
+          "pages": [
+            "/planung"
+          ],
+          "domains": ["koenigswirt.webflow.io", "www.koenigswirt-th.de", "koenigswirt-th.de"]
+        }
   },
   "defaultDomain": "www.koenigswirt-th.de"
 }
