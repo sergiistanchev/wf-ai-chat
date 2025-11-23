@@ -91,6 +91,13 @@
       formData.forEach((value, key) => {
         formObject[key] = value;
       });
+      
+      // Log form data for debugging (remove sensitive data in production)
+      console.log('Form data being sent:', {
+        ...formObject,
+        // Don't log the full estimate JSON if it's very long
+        'estimate-data-json': formObject['estimate-data-json'] ? '...' : undefined
+      });
 
       // Show loading state (optional - you can add a spinner here)
       const submitButton = form.querySelector('input[type="submit"]') || 

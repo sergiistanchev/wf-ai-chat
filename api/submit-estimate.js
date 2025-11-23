@@ -234,11 +234,22 @@ export default async function handler(req, res) {
 
     // Parse form data
     const formData = req.body;
+    console.log('Received form data keys:', Object.keys(formData));
+    console.log('User email from form:', formData.Email || formData.email);
+    
     const { userInfo, estimateData, summaryText } = parseFormData(formData);
+    console.log('Parsed user info:', { 
+      name: userInfo.name, 
+      email: userInfo.email, 
+      phone: userInfo.phone,
+      date: userInfo.date,
+      guests: userInfo.guests 
+    });
 
     // Validate required fields
     if (!userInfo.email) {
-      return res.status(400).json({ error: "Email is required" });
+      console.error('Email validation failed - no email found');
+      return res.status(400).json({ error: "Email is required", receivedData: Object.keys(formData) });
     }
 
     // Get total from structured data or form field
