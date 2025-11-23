@@ -269,9 +269,17 @@ export default async function handler(req, res) {
         subject: `Ihr Hochzeits-Angebot / Your Wedding Estimate - ${userInfo.name || "Hochzeit"}`,
         html: htmlContent,
       });
-      console.log('User email sent:', userEmailResult.data?.id);
+      console.log('User email result:', JSON.stringify(userEmailResult, null, 2));
+      console.log('User email sent - ID:', userEmailResult.data?.id || userEmailResult.id || 'No ID returned');
+      
+      // Check if email was actually sent
+      if (userEmailResult.error) {
+        console.error('Resend API error for user email:', userEmailResult.error);
+        throw new Error(`Resend API error: ${JSON.stringify(userEmailResult.error)}`);
+      }
     } catch (emailError) {
       console.error('Error sending user email:', emailError);
+      console.error('Error details:', emailError.response || emailError.message);
       throw new Error(`Failed to send user email: ${emailError.message}`);
     }
 
@@ -286,9 +294,17 @@ export default async function handler(req, res) {
         html: htmlContent,
         replyTo: userInfo.email, // So owner can reply directly
       });
-      console.log('Owner email sent:', ownerEmailResult.data?.id);
+      console.log('Owner email result:', JSON.stringify(ownerEmailResult, null, 2));
+      console.log('Owner email sent - ID:', ownerEmailResult.data?.id || ownerEmailResult.id || 'No ID returned');
+      
+      // Check if email was actually sent
+      if (ownerEmailResult.error) {
+        console.error('Resend API error for owner email:', ownerEmailResult.error);
+        throw new Error(`Resend API error: ${JSON.stringify(ownerEmailResult.error)}`);
+      }
     } catch (emailError) {
       console.error('Error sending owner email:', emailError);
+      console.error('Error details:', emailError.response || emailError.message);
       throw new Error(`Failed to send owner email: ${emailError.message}`);
     }
 
