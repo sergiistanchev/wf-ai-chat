@@ -33,12 +33,21 @@ function calculateItemTotal(price, guests, quantity = 1, isPerPerson = true) {
 
 // Parse form data and organize by groups
 function parseFormData(formData) {
+  // Try multiple variations of the date field name (handles encoding issues)
+  const dateField = formData["Wunschtermin-für-Hochzeit"] || 
+                    formData["Wunschtermin-f-r-Hochzeit"] || 
+                    formData["Wunschtermin-fuer-Hochzeit"] ||
+                    formData["Wunschtermin-f-r-Hochzeit"] ||
+                    formData.date || 
+                    formData.Date ||
+                    "";
+  
   const userInfo = {
     name: formData.Name || formData.name || "",
     email: formData.Email || formData.email || "",
-    phone: formData.Telefonnumer || formData.phone || "",
-    date: formData["Wunschtermin-für-Hochzeit"] || formData.date || "",
-    guests: parseInt(formData["Gäste"] || formData.guests || formData["number-of-guests"] || "10", 10),
+    phone: formData.Telefonnumer || formData.phone || formData.Telefon || "",
+    date: dateField,
+    guests: parseInt(formData["Gäste"] || formData.guests || formData["number-of-guests"] || formData["G-ste"] || "10", 10),
   };
 
   // Get summary text from Angebot field
@@ -330,6 +339,16 @@ export default async function handler(req, res) {
     const formData = req.body;
     console.log('Received form data keys:', Object.keys(formData));
     console.log('User email from form:', formData.Email || formData.email);
+    
+    // Log date field variations for debugging
+    const dateVariations = {
+      "Wunschtermin-für-Hochzeit": formData["Wunschtermin-für-Hochzeit"],
+      "Wunschtermin-f-r-Hochzeit": formData["Wunschtermin-f-r-Hochzeit"],
+      "Wunschtermin-fuer-Hochzeit": formData["Wunschtermin-fuer-Hochzeit"],
+      "date": formData.date,
+      "Date": formData.Date
+    };
+    console.log('Date field variations:', dateVariations);
     
     const { userInfo, estimateData, summaryText } = parseFormData(formData);
     console.log('Parsed user info:', { 
