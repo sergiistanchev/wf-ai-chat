@@ -230,7 +230,14 @@ export default async function handler(req, res) {
 
     // Get owner email and from email from env
     const ownerEmail = process.env.OWNER_EMAIL || "info@koenigswirt-th.de";
-    const fromEmail = process.env.FROM_EMAIL || "onboarding@resend.dev"; // Use Resend test domain or your verified domain
+    // Use test domain if custom domain is not verified yet
+    const fromEmail = process.env.FROM_EMAIL || "onboarding@resend.dev";
+    
+    // Check if we should use test domain (for development/testing)
+    const useTestDomain = process.env.USE_TEST_DOMAIN === "true" || !fromEmail.includes("@send.koenigswirt-th.de");
+    const actualFromEmail = useTestDomain ? "onboarding@resend.dev" : fromEmail;
+    
+    console.log('Using from email:', actualFromEmail);
 
     // Parse form data
     const formData = req.body;
@@ -260,11 +267,11 @@ export default async function handler(req, res) {
 
     // Send email to user
     console.log('Sending email to user:', userInfo.email);
-    console.log('From email:', fromEmail);
+    console.log('From email:', actualFromEmail);
     let userEmailResult;
     try {
       userEmailResult = await resend.emails.send({
-        from: fromEmail,
+        from: actualFromEmail,
         to: userInfo.email,
         subject: `Ihr Hochzeits-Angebot / Your Wedding Estimate - ${userInfo.name || "Hochzeit"}`,
         html: htmlContent,
@@ -288,7 +295,7 @@ export default async function handler(req, res) {
     let ownerEmailResult;
     try {
       ownerEmailResult = await resend.emails.send({
-        from: fromEmail,
+        from: actualFromEmail,
         to: ownerEmail,
         subject: `Neue Hochzeitsanfrage von ${userInfo.name || "Unbekannt"}`,
         html: htmlContent,
