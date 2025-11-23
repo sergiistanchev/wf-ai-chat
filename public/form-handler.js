@@ -115,7 +115,11 @@
           body: JSON.stringify(formObject),
         });
 
+        // Log response for debugging
+        console.log('API Response status:', response.status);
+        
         const result = await response.json();
+        console.log('API Response data:', result);
 
         if (result.ok) {
           // Show success modal
@@ -127,13 +131,14 @@
           // Scroll to top (optional)
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
-          // Show error message
-          alert('Fehler beim Senden. Bitte versuchen Sie es erneut.\nError sending. Please try again.');
+          // Show error message with details
+          const errorMsg = result.message || result.error || 'Unknown error';
           console.error('Form submission error:', result);
+          alert(`Fehler beim Senden: ${errorMsg}\nError sending: ${errorMsg}`);
         }
       } catch (error) {
         console.error('Form submission error:', error);
-        alert('Fehler beim Senden. Bitte versuchen Sie es erneut.\nError sending. Please try again.');
+        alert(`Fehler beim Senden. Bitte versuchen Sie es erneut.\nError sending. Please try again.\n\nDetails: ${error.message}`);
       } finally {
         // Restore button
         if (submitButton) {

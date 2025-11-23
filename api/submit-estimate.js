@@ -248,21 +248,38 @@ export default async function handler(req, res) {
     const htmlContent = generateEmailHTML(userInfo, estimateData, summaryText, total);
 
     // Send email to user
-    const userEmailResult = await resend.emails.send({
-      from: fromEmail,
-      to: userInfo.email,
-      subject: `Ihr Hochzeits-Angebot / Your Wedding Estimate - ${userInfo.name || "Hochzeit"}`,
-      html: htmlContent,
-    });
+    console.log('Sending email to user:', userInfo.email);
+    console.log('From email:', fromEmail);
+    let userEmailResult;
+    try {
+      userEmailResult = await resend.emails.send({
+        from: fromEmail,
+        to: userInfo.email,
+        subject: `Ihr Hochzeits-Angebot / Your Wedding Estimate - ${userInfo.name || "Hochzeit"}`,
+        html: htmlContent,
+      });
+      console.log('User email sent:', userEmailResult.data?.id);
+    } catch (emailError) {
+      console.error('Error sending user email:', emailError);
+      throw new Error(`Failed to send user email: ${emailError.message}`);
+    }
 
     // Send email to owner
-    const ownerEmailResult = await resend.emails.send({
-      from: fromEmail,
-      to: ownerEmail,
-      subject: `Neue Hochzeitsanfrage von ${userInfo.name || "Unbekannt"}`,
-      html: htmlContent,
-      replyTo: userInfo.email, // So owner can reply directly
-    });
+    console.log('Sending email to owner:', ownerEmail);
+    let ownerEmailResult;
+    try {
+      ownerEmailResult = await resend.emails.send({
+        from: fromEmail,
+        to: ownerEmail,
+        subject: `Neue Hochzeitsanfrage von ${userInfo.name || "Unbekannt"}`,
+        html: htmlContent,
+        replyTo: userInfo.email, // So owner can reply directly
+      });
+      console.log('Owner email sent:', ownerEmailResult.data?.id);
+    } catch (emailError) {
+      console.error('Error sending owner email:', emailError);
+      throw new Error(`Failed to send owner email: ${emailError.message}`);
+    }
 
     // Return JSON for AJAX form submission (will be handled by frontend)
     return res.status(200).json({
