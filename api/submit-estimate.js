@@ -77,7 +77,7 @@ function generateEmailHTML(userInfo, estimateData, summaryText, total) {
 
       let itemsHTML = "";
       
-      items.forEach(item => {
+        items.forEach(item => {
         const priceText = item.priceText || "-";
         let quantity = guestCount;
         let totalText = "-";
@@ -93,17 +93,17 @@ function generateEmailHTML(userInfo, estimateData, summaryText, total) {
           // Use pre-calculated total
           totalText = `${item.total.toFixed(2)} €`;
           // For guest count, don't show quantity
-          if (item.name.includes("Gäste") || item.name.includes("Guests")) {
+          if (item.name.includes("Gäste")) {
             quantity = item.total;
           }
         }
         
         itemsHTML += `
           <tr>
-            <td>${item.name}</td>
-            <td style="text-align: center;">${quantity}</td>
-            <td style="text-align: right;">${priceText}</td>
-            <td style="text-align: right; font-weight: ${item.total > 0 ? 'bold' : 'normal'};">${totalText}</td>
+            <td style="color: #333333 !important;">${item.name}</td>
+            <td style="text-align: center; color: #333333 !important;">${quantity}</td>
+            <td style="text-align: right; color: #333333 !important;">${priceText}</td>
+            <td style="text-align: right; font-weight: ${item.total > 0 ? 'bold' : 'normal'}; color: #333333 !important;">${totalText}</td>
           </tr>
         `;
       });
@@ -129,31 +129,123 @@ function generateEmailHTML(userInfo, estimateData, summaryText, total) {
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
-    .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .header { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white; padding: 25px; border-radius: 8px; margin-bottom: 30px; }
-    .header h1 { margin: 0 0 20px 0; font-size: 24px; }
-    .info-row { margin: 10px 0; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
-    .info-label { font-weight: bold; display: inline-block; width: 160px; }
-    .info-value { color: rgba(255,255,255,0.95); }
-    table { width: 100%; border-collapse: collapse; margin: 30px 0; background: white; }
-    th { background: #2c3e50; color: white; padding: 12px; text-align: left; font-weight: 600; }
-    th:last-child, td:last-child { text-align: right; }
-    th:nth-child(2) { text-align: center; }
-    td { padding: 12px; border-bottom: 1px solid #eee; }
-    tr:last-child td { border-bottom: none; }
-    .total-row { background: #f8f9fa; font-weight: bold; }
-    .total { font-size: 28px; font-weight: bold; color: #2c3e50; margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; text-align: center; border: 2px solid #2c3e50; }
-    .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #eee; color: #666; font-size: 14px; text-align: center; }
-    .footer strong { color: #2c3e50; }
-    .disclaimer { margin-top: 20px; font-size: 12px; color: #999; font-style: italic; }
+    /* Force light mode */
+    :root { color-scheme: light; }
+    body { 
+      font-family: Arial, sans-serif; 
+      line-height: 1.6; 
+      color: #333333 !important; 
+      background-color: #ffffff !important;
+      max-width: 800px; 
+      margin: 0 auto; 
+      padding: 20px; 
+    }
+    .container { 
+      background: #ffffff !important; 
+      padding: 30px; 
+      border-radius: 8px; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    }
+    .header { 
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important; 
+      color: #ffffff !important; 
+      padding: 25px; 
+      border-radius: 8px; 
+      margin-bottom: 30px; 
+    }
+    .header h1 { 
+      margin: 0 0 20px 0; 
+      font-size: 24px; 
+      color: #ffffff !important;
+    }
+    .info-row { 
+      margin: 10px 0; 
+      padding: 8px 0; 
+      border-bottom: 1px solid rgba(255,255,255,0.2); 
+    }
+    .info-label { 
+      font-weight: bold; 
+      display: inline-block; 
+      width: 160px; 
+      color: #ffffff !important;
+    }
+    .info-value { 
+      color: #ffffff !important; 
+    }
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      margin: 30px 0; 
+      background: #ffffff !important; 
+    }
+    th { 
+      background: #2c3e50 !important; 
+      color: #ffffff !important; 
+      padding: 12px; 
+      text-align: left; 
+      font-weight: 600; 
+    }
+    th:last-child, td:last-child { 
+      text-align: right; 
+    }
+    th:nth-child(2) { 
+      text-align: center; 
+    }
+    td { 
+      padding: 12px; 
+      border-bottom: 1px solid #eeeeee; 
+      color: #333333 !important;
+      background: #ffffff !important;
+    }
+    tr:last-child td { 
+      border-bottom: none; 
+    }
+    .total-row { 
+      background: #f8f9fa !important; 
+      font-weight: bold; 
+    }
+    .total { 
+      font-size: 28px; 
+      font-weight: bold; 
+      color: #2c3e50 !important; 
+      margin: 30px 0; 
+      padding: 20px; 
+      background: #f8f9fa !important; 
+      border-radius: 8px; 
+      text-align: center; 
+      border: 2px solid #2c3e50; 
+    }
+    .footer { 
+      margin-top: 40px; 
+      padding-top: 20px; 
+      border-top: 2px solid #eeeeee; 
+      color: #666666 !important; 
+      font-size: 14px; 
+      text-align: center; 
+    }
+    .footer strong { 
+      color: #2c3e50 !important; 
+    }
+    .footer p {
+      color: #666666 !important;
+      margin: 5px 0;
+    }
+    .disclaimer { 
+      margin-top: 20px; 
+      font-size: 12px; 
+      color: #999999 !important; 
+      font-style: italic; 
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>🎉 Hochzeits-Angebot / Wedding Estimate</h1>
+      <h1>🎉 Hochzeits-Angebot</h1>
       <div class="info-row">
         <span class="info-label">Name:</span>
         <span class="info-value">${userInfo.name || "Nicht angegeben"}</span>
@@ -179,10 +271,10 @@ function generateEmailHTML(userInfo, estimateData, summaryText, total) {
     <table>
       <thead>
         <tr>
-          <th>Artikel / Item</th>
-          <th>Gäste / Guests</th>
+          <th>Artikel</th>
+          <th>Gäste</th>
           <th>Preis p.P./St.</th>
-          <th>Gesamt / Total</th>
+          <th>Gesamt</th>
         </tr>
       </thead>
       <tbody>
@@ -190,15 +282,14 @@ function generateEmailHTML(userInfo, estimateData, summaryText, total) {
       </tbody>
     </table>
     
-    <div class="total">Gesamtpreis / Total Price: ${finalTotal.toFixed(2)} €</div>
+    <div class="total">Gesamtpreis: ${finalTotal.toFixed(2)} €</div>
     
     <div class="footer">
       <p><strong>Königswirt im Trachtenheim</strong></p>
       <p>Donauwörther Str. 46, 86343 Königsbrunn</p>
       <p>Tel: 08-231-86000 | E-Mail: info@koenigswirt-th.de</p>
       <div class="disclaimer">
-        Dies ist eine automatisch generierte Kostenschätzung. Für ein finales Angebot kontaktieren Sie uns bitte persönlich.<br>
-        This is an automatically generated cost estimate. Please contact us personally for a final quote.
+        Dies ist eine automatisch generierte Kostenschätzung. Für ein finales Angebot kontaktieren Sie uns bitte persönlich.
       </div>
     </div>
   </div>
