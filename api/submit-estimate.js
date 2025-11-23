@@ -155,12 +155,12 @@ function generateEmailHTML(userInfo, estimateData, summaryText, total) {
     }
     .container { 
       background: #ffffff !important; 
-      padding: 30px; 
+      padding: 0px; 
       border-radius: 8px; 
       box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
     }
     .header { 
-      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important; 
+      background: #00642f;
       color: #ffffff !important; 
       padding: 25px; 
       border-radius: 8px; 
@@ -192,8 +192,6 @@ function generateEmailHTML(userInfo, estimateData, summaryText, total) {
       background: #ffffff !important; 
     }
     th { 
-      background: #2c3e50 !important; 
-      color: #ffffff !important; 
       padding: 12px; 
       text-align: left; 
       font-weight: 600; 
