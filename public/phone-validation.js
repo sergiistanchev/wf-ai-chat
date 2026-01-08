@@ -29,7 +29,7 @@
 
     input.setAttribute('inputmode', 'tel');
     input.setAttribute('autocomplete', 'tel');
-    input.setAttribute('placeholder', '+49 171 1234567');
+    input.setAttribute('placeholder', '+49 ');
 
     function formatAsYouType(val) {
       // keep only digits, spaces, +, (), -
