@@ -40,6 +40,16 @@
             "/planung"
           ],
           "domains": ["koenigswirt.webflow.io", "www.koenigswirt-th.de", "koenigswirt-th.de"]
+        },
+        "phone-validation": {
+          "file": "phone-validation.js",
+          "pages": [
+            "*"
+          ],
+          "domains": ["koenigswirt.webflow.io", "www.koenigswirt-th.de", "koenigswirt-th.de"],
+          "dependencies": [
+            "/libphonenumber-max.min.js"
+          ]
         }
   },
   "defaultDomain": "www.koenigswirt-th.de"
