@@ -37,7 +37,19 @@
 
       var ayt = new lp.AsYouType('DE'); // default country DE
       ayt.input(val);
-      return ayt.getNumberValue() ? ayt.getNumber().formatInternational() : ayt.getTemplate() ? ayt.getTemplate().replace(/·/g, '') : ayt.getInput();
+      
+      var number = ayt.getNumber();
+      if (number) {
+        return number.formatInternational();
+      }
+      
+      var template = ayt.getTemplate();
+      if (template) {
+        return template.replace(/·/g, '');
+      }
+      
+      // Fallback to original value if no formatting available
+      return val;
     }
 
     function updateHiddenAndValidity() {
